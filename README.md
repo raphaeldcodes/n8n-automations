@@ -1,25 +1,25 @@
-# Orquestração de Infraestrutura Local com Terraform e Docker
+# Automação de Consulta de CEP com n8n e ViaCEP
 
-Este é um projeto de Infraestrutura como Código (IaC) onde utilizei o Terraform para automatizar e aprovisionar um ambiente web completo, seguro e isolado dentro de containers Docker.
+Este é um projeto de automação no n8n onde construí um fluxo integrado a uma API pública para consultar dados de endereços a partir de um CEP e formatar a resposta final de maneira limpa.
 
 ## O que este projeto faz?
 
-A arquitetura simula um ambiente real de produção seguindo as melhores práticas de Cloud:
+A automação simula uma integração de dados em tempo real conectando requisições HTTP a nós de transformação:
 
-* **Rede Privada Isolada:** Cria uma rede virtual própria no Docker (`rede_interna_projeto`).
-* **Banco de Dados Protegido (Postgres):** O container do banco de dados fica trancado dentro desta rede privada. Ele não expõe portas para a internet, protegendo as informações contra ataques externos.
-* **Servidor Web como Escudo (Nginx):** É o único container exposto para o mundo exterior (através da porta 8080). Ele recebe os acessos dos utilizadores e comunica internamente com o banco de dados.
-* **Ordem Lógica Automatizada:** Utiliza a diretiva `depends_on` para garantir que o servidor web só seja iniciado após o banco de dados estar 100% operacional.
+* **Entrada de Dados (Edit Fields):** Define o CEP de entrada (utilizando o CEP da Av. Paulista) para dar início ao processamento.
+* **Consumo de API Externa (HTTP Request):** Faz uma requisição `GET` para a API pública do **ViaCEP**, enviando o CEP parametrizado e recebendo os dados completos do endereço em JSON.
+* **Tratamento de Saída (Edit Fields):** Filtra e formata os dados retornados pela API, entregando no `output` final apenas as informações essenciais desejadas: a **Cidade** e o **UF**.
 
 ## Tecnologias Utilizadas
 
-* **Terraform**
-* **Docker** (Containers)
+* **n8n** (Ferramenta de Automação de Fluxos)
+* **API Pública do ViaCEP** (Serviço de consulta de CEPs)
+* **JSON / REST**
 
-## Organização dos Arquivos (.tf)
+## Estrutura do Fluxo
 
-O projeto foi estruturado seguindo os padrões de mercado:
+O projeto utiliza os seguintes nós integrados:
 
-* `main.tf`: O coração do projeto. Contém a declaração dos recursos (redes, imagens e containers).
-* `variables.tf`: Centraliza os parâmetros configuráveis (portas, senhas, nomes) para evitar valores fixos no código.
-* `outputs.tf`: Painel de controlo que exibe os dados de conectividade prontos a usar após a execução.<img width="1347" height="610" alt="image" src="https://github.com/user-attachments/assets/f6f871d2-4d7e-438c-b4ac-1f994d9d97b3" />
+* `Edit Fields (Input)`: Configura as variáveis iniciais da consulta (CEP da Av. Paulista).
+* `HTTP Request`: Realiza a chamada à API externa do ViaCEP.
+* `Edit Fields (Output)`: Estrutura a resposta final exibindo apenas a cidade e o estado (UF).
