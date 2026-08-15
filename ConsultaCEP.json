@@ -1,0 +1,132 @@
+{
+  "name": "ConsultaCEP",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ee079940-81a8-4b9d-b2d1-311c854d5a92",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "aefef208-7602-44c0-9cbe-98965a94f86e",
+              "name": "CEP",
+              "value": "01311000",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "5938a1a6-0899-44ec-856f-5cd094384394",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "url": "https://viacep.com.br/ws/01311000/json/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        448,
+        0
+      ],
+      "id": "0dd1bbf2-1b7d-41ba-b0fc-44c23a68c2ce",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "de79abcb-0daa-48a2-b400-2338e13a9643",
+              "name": "cidade",
+              "value": "={{ $json.localidade }}",
+              "type": "string"
+            },
+            {
+              "id": "ff79f0ec-0cfa-4b13-b2b0-3809b0f18aa1",
+              "name": "estado",
+              "value": "={{ $json.uf }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": "={{ false }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        672,
+        0
+      ],
+      "id": "6d73f951-f887-48a8-9b32-1bc1e14bb09d",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "8ac26475-bea9-4fbb-b1cb-307e299ce5f2",
+  "meta": {
+    "instanceId": "177f409b386e47228e0bbcd532048708d21a2b0bdfb02653123b5b3bb5741248"
+  },
+  "nodeGroups": [],
+  "id": "kzUQxGw0RxD43q3j",
+  "tags": []
+}
